@@ -1,0 +1,309 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.17+ wizard for JavaCC 1.5.0+
+ */
+
+PARSER_BEGIN(EG2)
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+public class EG2
+{
+  static String x1,x2,x3,x4,x10,x6,x11,x15;
+  static ArrayList<String> x5 = new ArrayList<String>();
+   static ArrayList<String> x7 = new ArrayList<String>();
+   static ArrayList<String> x8 = new ArrayList<String>();
+   static ArrayList<String> x18 = new ArrayList<String>();
+ static int n,x;
+  
+  public EG2() {
+    
+  }
+ public static String getid() {
+   return x1;
+} 
+public static String getagent() {
+   return x2;
+} 
+ public static String getverb() {
+   return x3;
+}
+public static String getop() {
+   return x4;
+}
+public static ArrayList getobj() {
+  
+   return x5;
+}
+public static String getcondition() {
+  
+   return x10; 
+}
+ public static String getopMode() {
+  
+   return x6; 
+}
+public static ArrayList getstakeholders() {
+  
+   return x7;
+}
+public static ArrayList getparameters() {
+  
+   return x8;
+}
+public static String getvalue() {
+  
+   return x11; 
+}
+public static String geteffect() {
+  
+   return x15; 
+}
+public static ArrayList gets() {
+  
+   return x18;
+}
+}
+PARSER_END(EG2)
+
+SKIP :
+{
+   "\r"
+| "\t"
+| "\n"
+}
+TOKEN :
+{
+
+<ID: < STRING>>
+| <CONDITION: "by"|"only" | "when" | "if" | "in fewer than" | "once" | "within" | "in less than" | "until" | "as close as possible to">
+
+| < STATUS: "empty"| "valid" | "invalid" | "incomplete" | "current" | "available" | "successful" | "unavailable" | "recommended" | "registered" | "new" | "placed" | "complete" | 
+
+"unsuccessful" | "delivered" | "shipped">
+| < VERB: "shall" | "should"| "will" | "may" | "can" |"must">
+| <OpMode: "able" | "not be able" | "not" | "allow" | "not allow">
+| < AGENT: <users> >
+| < STAKEHOLDERS:("about "|"of ")? ("all ")? <users> >
+
+| <OPERATION: "completing" |"view" | "edit" | "search" | "add" | "remove" | "select" | "browse" | "continue" | "place" | "login" | "logout" | "register" | "check out" | "buy" |" authenticate" | 
+
+"retrieve" | "upload" | "submit" | "get" | "save" | "purchase"| "pay" | "pays" | "deliver" | "ship">
+|  <OBJECT: "items"|"item" | "product" | "goods" | "cart" | "information" | "order" | "form" | "detail" | "list" | "history" | "account" | "wish list" | "bill" >
+
+| <Parameter:"username" | "password" | "field" | "price" | "description" | "name" | "quantity" | "address" | "email" | "Zip" | "country" | "phone no." | "shipping charges" | "cash" | "card"| "category" >
+| < Conj: "and"|"or" >
+| < EFFECT: "then" |"so" >
+| < VALUE: < DIGIT>(< DIGIT >)* " " ("seconds" | "minutes" | "hours" | "days" | "month" | "year" | "times") >
+}
+TOKEN:
+{
+  <STRING : <LETTER>(<LETTER>)* < DIGIT>(< DIGIT >)* >
+| <#DIGIT: ["0"-"9"]>
+| <#LETTER: ["a"-"z", "A"-"Z"]>
+| <users : "users" |"application" | "customer" | "admin" >
+}
+int start() :
+{}
+
+{
+  wff()   // "well formed formula"  
+  {
+    return 0;  // returns 0 on successful parse
+  }
+}
+
+  
+void wff() :
+{}
+{ { x5.clear();x7.clear(); x8.clear();x18.clear();x10=null;}
+event()
+  
+}
+
+void event() :
+{Token a;
+
+}
+{
+  
+a=< ID>
+{x1=a.toString(); }
+{System.out.println("ID: "+ a);}
+":"
+
+(LOOKAHEAD(2)
+ " "  
+   action() )*
+   
+(LOOKAHEAD(2) " "
+condition() )*
+ (   effect())*
+
+"."
+
+}
+void action():
+{Token b,c,d,e,f,i,s,g;
+}
+{
+
+ ("a "|"an "|"the "| "The ")? b=< AGENT>
+{
+  x2=b.toString();
+  System.out.println("AGENT: "+ b);}
+(LOOKAHEAD(2)
+" " c=< VERB>
+{x3=c.toString();
+  System.out.println("VERB: "+ c);})?
+
+(LOOKAHEAD(2)
+  " " ("be ")?
+d=< OpMode> (" to")?
+{x6=d.toString();
+  System.out.println("OpMode: "+ d);})?
+
+" "  e=<OPERATION>
+{x4=e.toString();
+  System.out.println("OPERATION: "+ e);}
+
+" " ("a "|"an "|"the "|"for "|"in ")? ("the")?
+f=< OBJECT>
+{x5.add(f.toString());
+
+  System.out.println("OBJECT: "+ f);}
+
+(LOOKAHEAD(4) 
+" " ("a "|"an "|"the "|"in "|"for "|"about ")? ("an ")?
+i=< OBJECT>
+{x5.add(i.toString());
+
+  System.out.println("OBJECT: "+ i);})*
+  
+(LOOKAHEAD(2)
+stakeholders())*
+
+(LOOKAHEAD(2)
+" " ("through ")? 
+parameter())*
+}
+
+
+void condition() :
+{Token z,b,c,d,e,f;
+}
+{ 
+ z=< CONDITION>
+ 
+{
+  x10=z.toString();
+  System.out.println("CONDITION: "+ z);
+  }
+
+(LOOKAHEAD(3)" "   ("a "|"an "|"the "| "The")? b=< AGENT>
+{x2=b.toString();
+  System.out.println("AGENT: "+ b);}
+)*
+(LOOKAHEAD(2)
+" " c=< VERB>
+{
+  x3=c.toString();
+  System.out.println("VERB: "+ c);})?
+
+(LOOKAHEAD(2)
+  " " ("be ")?
+d=< OpMode> (" to")?
+{x6=d.toString();
+  System.out.println("OpMode: "+ d);})?
+(LOOKAHEAD(2)
+" "  e=<OPERATION>
+{x4=e.toString();
+System.out.println("OPERATION: "+ e);}
+)*
+
+(LOOKAHEAD(2)  " " ("a "|"an "|"the "|"for "|"in "|"there are ")? 
+f=< OBJECT>
+{
+  x5.add(f.toString());
+
+System.out.println("OBJECT: "+ f);})*
+(LOOKAHEAD(2)
+  " " ("a "|"an "|"the "|"for "|"in ")? 
+f=< OBJECT>
+{x5.add(f.toString());
+
+System.out.println("OBJECT: "+ f);})*
+
+(LOOKAHEAD(2)
+  status()
+  (LOOKAHEAD(3)
+   " " z=<Conj> status()
+  )*)*
+
+(LOOKAHEAD(2)" "   z=< VALUE>
+ {x11=z.toString();
+ System.out.println("VALUE: "+ z);})*
+}
+
+
+void effect():
+{Token y,i;
+}
+{ " "
+  y=< EFFECT>
+{x15=y.toString();
+  System.out.println("EFFECT: "+ y);}
+(LOOKAHEAD(2) 
+" " ("a "|"an "|"the "|"in "|"for ")?
+i=< OBJECT>
+{x5.add(i.toString());
+System.out.println("OBJECT: "+ i);})*
+
+(LOOKAHEAD(2)
+  status() )*
+}
+
+void stakeholders():
+{Token s=null;String s1 = "";int i=0;
+}
+{
+" " 
+s=<STAKEHOLDERS>
+{s1 = s.toString();
+String[] words = { "users", "application","customer","admin"};
+for (String word : words) {
+int loc = s1.indexOf(word);
+while (loc != -1) {
+   i=loc;
+   loc = s1.indexOf(word, loc + 1); } }
+   
+   s1=s1.substring(i);
+   x7.add(s1.toString());
+   System.out.println("STAKEHOLDERS: "+ s1);
+} 
+
+
+}
+void parameter():
+{Token p,j,z;
+}
+{
+
+p=< Parameter>
+{x8.add(p.toString());System.out.println("Parameters: "+ p);}
+(LOOKAHEAD(2)
+   " " z=<Conj> " "
+j=< Parameter>
+{x8.add(j.toString());System.out.println("Parameters: "+ j);}
+)*
+}
+void status() :
+{Token h;
+}
+{
+ " " ("is ")?
+h=< STATUS>
+{x18.add(h.toString());
+  System.out.println("STATUS: "+ h);}
+
+}
